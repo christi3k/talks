@@ -1,0 +1,89 @@
+Registering sniffs in PEAR standard... DONE (26 sniffs registered)
+Creating file list... DONE (1 files in queue)
+Processing calendar.class.php [2656 tokens in 535 lines]... DONE in < 1 second (75 errors, 0 warnings)
+
+FILE: /var/www/geeklog-1.8.0/system/classes/calendar.class.php
+--------------------------------------------------------------------------------
+FOUND 75 ERROR(S) AFFECTING 33 LINE(S)
+--------------------------------------------------------------------------------
+   2 | ERROR | You must use "/**" style comments for a file comment
+  49 | ERROR | Missing @category tag in class comment
+  49 | ERROR | Missing @package tag in class comment
+  49 | ERROR | Missing @author tag in class comment
+  49 | ERROR | Missing @license tag in class comment
+  49 | ERROR | Missing @link tag in class comment
+  50 | ERROR | Opening brace of a class must be on the line after the
+     |       | definition
+ 104 | ERROR | Missing class doc comment
+ 104 | ERROR | Opening brace of a class must be on the line after the
+     |       | definition
+ 172 | ERROR | Expected 1 space before variable type
+ 172 | ERROR | Expected 1 space after the longest type
+ 173 | ERROR | Expected 1 space before variable type
+ 173 | ERROR | Expected 1 space after the longest variable name
+ 174 | ERROR | Last parameter comment requires a blank newline after it
+ 174 | ERROR | Expected 1 space before variable type
+ 184 | ERROR | No space found after comma in function call
+ 184 | ERROR | No space found after comma in function call
+ 184 | ERROR | No space found after comma in function call
+ 184 | ERROR | No space found after comma in function call
+ 184 | ERROR | No space found after comma in function call
+ 195 | ERROR | Expected 1 space before variable type
+ 195 | ERROR | Expected 1 space after the longest type
+ 196 | ERROR | Expected 1 space before variable type
+ 196 | ERROR | Expected 1 space after the longest variable name
+ 197 | ERROR | Last parameter comment requires a blank newline after it
+ 197 | ERROR | Expected 1 space before variable type
+ 207 | ERROR | No space found after comma in function call
+ 207 | ERROR | No space found after comma in function call
+ 218 | ERROR | Last parameter comment requires a blank newline after it
+ 218 | ERROR | Expected 1 space before variable type
+ 218 | ERROR | Expected 1 space after the longest type
+ 218 | ERROR | Expected 1 space after the longest variable name
+ 247 | ERROR | Expected 1 space before variable type
+ 247 | ERROR | Expected 1 space after the longest type
+ 247 | ERROR | Expected 1 space after the longest variable name
+ 248 | ERROR | Last parameter comment requires a blank newline after it
+ 248 | ERROR | Expected 1 space before variable type
+ 310 | ERROR | Last parameter comment requires a blank newline after it
+ 310 | ERROR | Expected 1 space before variable type
+ 310 | ERROR | Expected 1 space after the longest type
+ 310 | ERROR | Expected 1 space after the longest variable name
+ 314 | ERROR | Opening brace should be on a new line
+ 355 | ERROR | Last parameter comment requires a blank newline after it
+ 355 | ERROR | Expected 1 space before variable type
+ 355 | ERROR | Expected 1 space after the longest type
+ 355 | ERROR | Expected 1 space after the longest variable name
+ 361 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 4
+ 413 | ERROR | Last parameter comment requires a blank newline after it
+ 413 | ERROR | Expected 1 space before variable type
+ 413 | ERROR | Expected 1 space after the longest type
+ 413 | ERROR | Expected 1 space after the longest variable name
+ 415 | ERROR | Missing @return tag in function comment
+ 428 | ERROR | Expected 1 space before variable type
+ 428 | ERROR | Expected 1 space after the longest type
+ 429 | ERROR | Last parameter comment requires a blank newline after it
+ 429 | ERROR | Expected 1 space before variable type
+ 429 | ERROR | Expected 1 space after the longest variable name
+ 429 | ERROR | Doc comment for "$week_start" missing
+ 431 | ERROR | Missing @return tag in function comment
+ 472 | ERROR | Expected 1 space before variable type
+ 473 | ERROR | Expected 1 space before variable type
+ 474 | ERROR | Last parameter comment requires a blank newline after it
+ 474 | ERROR | Expected 1 space before variable type
+ 474 | ERROR | Expected 1 space after the longest type
+ 474 | ERROR | Expected 1 space after the longest variable name
+ 476 | ERROR | Missing @return tag in function comment
+ 479 | ERROR | No space found after comma in function call
+ 479 | ERROR | No space found after comma in function call
+ 499 | ERROR | No space found after comma in function call
+ 520 | ERROR | Expected 1 space before variable type
+ 520 | ERROR | Expected 1 space after the longest type
+ 521 | ERROR | Last parameter comment requires a blank newline after it
+ 521 | ERROR | Expected 1 space before variable type
+ 521 | ERROR | Expected 1 space after the longest variable name
+ 525 | ERROR | Opening brace should be on a new line
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 11.00Mb
+

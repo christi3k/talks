@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <meta http-equiv="content-type" content="text/html;charset=utf-8"> 
+   <title>Tools for Spelunking a New-to-You Codebase</title>
+
+<meta name="generator" content="Vim">
+<meta name="author"    content="Christie Koehler" >
+
+<!-- SyntaxHighlighter (sh) style sheet; goes first so we can override styles if needed -->
+<!-- todo: add theme-ing support -->
+<link rel="stylesheet" href="highlighter/shCoreDefault.css">
+
+<!-- S6 style sheet links -->
+<link rel="stylesheet" href="spelunking.css"  media="projection" id="styleProjection">
+<link rel="stylesheet" href="s6/screen.css"          media="screen" id="styleScreen">
+<link rel="stylesheet" href="s6/print.css"           media="print">
+
+<!-- S6 JS -->
+<script src="s6/jquery.js"></script>
+<script src="s6/jquery.slideshow.js"></script>
+
+<!-- SyntaxHighlighter (sh) machinery -->
+<script src="highlighter/shCore.js"></script>
+
+<!-- SyntaxHighlighter brushes, remove those for languages you don't need --> 
+<script src="highlighter/shBrushAppleScript.js"></script>
+<script src="highlighter/shBrushAS3.js"></script>
+<script src="highlighter/shBrushBash.js"></script>
+<script src="highlighter/shBrushColdFusion.js"></script>
+<script src="highlighter/shBrushCpp.js"></script>
+<script src="highlighter/shBrushCSharp.js"></script>
+<script src="highlighter/shBrushCss.js"></script>
+<script src="highlighter/shBrushDelphi.js"></script>
+<script src="highlighter/shBrushDiff.js"></script>
+<script src="highlighter/shBrushErlang.js"></script>
+<script src="highlighter/shBrushGroovy.js"></script>
+<script src="highlighter/shBrushJavaFX.js"></script>
+<script src="highlighter/shBrushJava.js"></script>
+<script src="highlighter/shBrushJScript.js"></script>
+<script src="highlighter/shBrushPerl.js"></script>
+<script src="highlighter/shBrushPhp.js"></script>
+<script src="highlighter/shBrushPlain.js"></script>
+<script src="highlighter/shBrushPowerShell.js"></script>
+<script src="highlighter/shBrushPython.js"></script>
+<script src="highlighter/shBrushRuby.js"></script>
+<script src="highlighter/shBrushSass.js"></script>
+<script src="highlighter/shBrushScala.js"></script>
+<script src="highlighter/shBrushSql.js"></script>
+<script src="highlighter/shBrushVb.js"></script>
+<script src="highlighter/shBrushXml.js"></script>
+
+
+<script type="text/javascript">
+
+$(document).ready( function() {
+  Slideshow.init();
+  SyntaxHighlighter.all();
+} );
+
+  
+ 
+</script>
+
+<!-- Better Browser Banner for Microsoft Internet Explorer (IE) -->
+<!--[if IE]>
+<script src="s6/jquery.microsoft.js"></script>
+<![endif]-->
+
+
+
+</head>
+<body>
+
+<div class="layout"> 
+  <div id="header"></div>
+  <div id="footer">
+    <h1></h1>
+    <h2></h2>
+  </div>
+</div><!-- layout -->
+
+<div class="presentation">
+   
+<div class='slide '>
+<h1>Tools for Spelunking a New-to-You Codebase</h1><h2>Christie Koehler</h2>
+<h3>OSCON 2011 &mdash; Portland, Oregon</h3>
+<h3>christiekoehler@gmail.com</h3>
+<h3>@christiekoehler</h3>
+</div>
+<div class='slide cave fullimage'>
+<p><!-- _S9SLIDE_  cave fullimage --></p>
+</div>
+<div class='slide fullimage'>
+<p><!-- _S9SLIDE_  fullimage --></p>
+<p><img src="images/lego-tools1.jpg" alt="" /></p>
+
+</div>
+<div class='slide '>
+<h1>&#8220;How you do learn a new-to-you codebase?&#8221;</h1><p>Some useful tools:</p>
+<ul>
+	<li>phpinclued</li>
+	<li>xdebug</li>
+	<li>phploc</li>
+	<li>phpdocumentor</li>
+	<li>PHP_CodeSniffer</li>
+	<li>Reflection Class</li>
+</ul>
+
+</div>
+<div class='slide '>
+<h1>phpinclued</h1><p>phpinclued helps you analyze your project&#8217;s structure (includes or classes).</p>
+<ul>
+	<li>Yes, that&#8217;s the correct spelling.</li>
+	<li>Available via pecl.</li>
+	<li>Use with Graphiz to create visualizations.</li>
+</ul>
+<p>To install:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+$ sudo pecl install channel://pecl.php.net/inclued-0.1.2
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>phpinclued</h1><p>If successful, you should see something like:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+Build process completed successfully
+Installing '/usr/lib/php5/20090626/inclued.so'
+install ok: channel://pecl.php.net/inclued-0.1.2
+configuration option &quot;php_ini&quot; is not set to php.ini location
+You should add &quot;extension=inclued.so&quot; to php.ini
+</pre></div>
+<!-- end code -->
+
+<p>edit your php.ini (or create a /conf.d/inclued.ini)</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+extension=inclued.so
+inclued.enabled=on
+inclued.dumpdir=/tmp/
+</pre></div>
+<!-- end code -->
+
+<p>Don&#8217;t forget to turn this off when you&#8217;re done (/tmp will fill up quickly!)</p>
+
+</div>
+<div class='slide '>
+<h1>phpinclued usage</h1><!-- begin code{:name=>"snippets/example01-inclued.php"} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>&lt;?php
+$path = ini_get('inclued.dumpdir');
+$filename = isset($argv[1]) ? $argv[1] : false;
+
+if($path &amp;&amp; is_dir($path) &amp;&amp; is_file($path.$filename)) {
+    $data = file_get_contents($path.$filename);
+    $inclued = unserialize($data);
+    $keys = array_keys($inclued);
+    print_r($keys);
+    echo PHP_EOL;
+    print_r($inclued['classes']);
+    echo PHP_EOL;
+}
+?&gt;
+</pre></div>
+<div class="codeurl">snippets/example01-inclued.php</div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>phpinclued results</h1><!-- begin code{:name=>"snippets/example01-results.txt"} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>[62] =&gt; Array
+    (
+        [name] =&gt; WP_Widget_Text
+        [mangled_name] =&gt; wp_widget_text
+        [filename] =&gt; /var/www/wordpress/wp-includes/default-widgets.php
+        [line] =&gt; 368
+        [parent] =&gt; Array
+            (
+                [name] =&gt; WP_Widget
+                [filename] =&gt; /var/www/wordpress/wp-includes/widgets.php
+                [line] =&gt; 24
+            )
+
+    )
+</pre></div>
+<div class="codeurl">snippets/example01-results.txt</div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>phpinclued &amp; graphiz</h1><p>Make sure you have graphiz installed:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+sudo aptitude install graphviz
+</pre></div>
+<!-- end code -->
+
+<p>Run gengraph.php (comes with inclued):</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+php /usr/share/php/gengraph.php -i /tmp/inclued.29752.4
+</pre></div>
+<!-- end code -->
+
+<p>Then use graphiz to create the graphic:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+dot -Tsvg -o wordpress.svg inclued.out.dot
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>phpinclued &amp; graphviz results</h1><p><img src="images/wordpress-crop.png" alt="" /></p>
+
+</div>
+<div class='slide '>
+<h1>xdebug profiling</h1><p>xdebug is a profiler and debugger for php</p>
+<p>install it via pecl:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+$ sudo pecl install xdebug
+</pre></div>
+<!-- end code -->
+
+<p>if successful, you will see:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+Build process completed successfully
+Installing '/usr/lib/php5/20090626/xdebug.so'
+install ok: channel://pecl.php.net/xdebug-2.1.1
+configuration option &quot;php_ini&quot; is not set to php.ini location
+You should add &quot;extension=xdebug.so&quot; to php.ini
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>xdebug (configuration)</h1><p>edit your php.ini:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+zend_extension=/usr/lib/php5/20090626/xdebug.so
+
+; enable by default
+xdebug.default_enable = 1
+
+; disable @ error suppression
+xdebug.scream = 1
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>xdebug useful methods</h1><p>Includes function to determine calling class, function, file and line, respectively:</p>
+<ul>
+	<li>xdebug_call_class()</li>
+	<li>xdebug_call_function()</li>
+	<li>xdebug_call_file()</li>
+	<li>xdebug_call_line()</li>
+</ul>
+<p>A bit easier to user than debug_backtrace().</p>
+<p>Other useful functions like <em>xdebug_memory_usage</em>, <em>xdebug_peak_memory_usage</em>, <em>xdebug_get_headers</em>.</p>
+
+</div>
+<div class='slide '>
+<h1>xdebug profiling</h1><p>Useful for identifying bottlenecks and learning how your code is run.</p>
+<p>Outputs a cachegrind compatible file, which can be analyzed with:</p>
+<ul>
+	<li>KCacheGrind,</li>
+	<li>xdebugtoolkit: <img src="http://code.google.com/p/xdebugtoolkit/" alt="" /></li>
+	<li>webgrind</li>
+</ul>
+<p>Enable by adding the following to php.ini:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+xdebug.profiler_enable = 1
+xdebug.profiler_output_dir = /tmp               ; (default)
+xdebug.profiler_output_name = cachegrind.out.%p ; (default)
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>xdebug profiling</h1><p>cachegrind.out data can be analyzed with kcachegrind:</p>
+<p><img src="images/cachegrind-sm.png" alt="" /></p>
+
+</div>
+<div class='slide '>
+<h1>phploc (lines of code)</h1><p>Allows you to give you a quick overview of a project&#8217;s size</p>
+<p>https://github.com/sebastianbergmann/phploc/</p>
+<p>Install through PEAR:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+sudo pear channel-discover pear.phpunit.de
+sudo pear channel-discover components.ez.no
+sudo pear install phpunit/phploc
+</pre></div>
+<!-- end code -->
+
+<p>Usage:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+phploc --count-tests /var/www/ThinkUp/
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>phploc results</h1><p>results:</p>
+<!-- begin code{:name=>"snippets/phploc-results.txt"} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>phploc 1.6.1 by Sebastian Bergmann.
+
+Directories:                                         65
+Files:                                              588
+
+Lines of Code (LOC):                             114978
+  Cyclomatic Complexity / Lines of Code:           0.07
+Comment Lines of Code (CLOC):                     38921
+Non-Comment Lines of Code (NCLOC):                76057
+
+Namespaces:                                           6
+Interfaces:                                          48
+Classes:                                            640
+  Abstract:                                          23 (3.59%)
+  Concrete:                                         617 (96.41%)
+  Average Class Length (NCLOC):                     116
+Methods:                                           3442
+  Scope:
+    Non-Static:                                    3215 (93.40%)
+    Static:                                         227 (6.60%)
+  Visibility:
+    Public:                                        2776 (80.65%)
+    Non-Public:                                     666 (19.35%)
+  Average Method Length (NCLOC):                     21
+  Cyclomatic Complexity / Number of Methods:       2.35
+
+Anonymous Functions:                                 95
+Functions:                                          108
+
+Constants:                                          175
+  Global constants:                                  37
+  Class constants:                                  138
+
+Tests:
+  Classes:                                          281
+  Methods:                                         1855
+</pre></div>
+<div class="codeurl">snippets/phploc-results.txt</div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>PHP_CodeSniffer</h1><p>Analyzes code for adherence to different coding standards.
+p. Standards installed by default: PEAR, PHPCS, Squiz, MySource and Zend.
+p. You can create your own coding standards or &#8220;sniffs&#8221;.
+p. Can be used in conjunction with pre-commit hooks.</p>
+<p>Install via PEAR:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+sudo pear install PHP_CodeSniffer
+</pre></div>
+<!-- end code -->
+
+<p>Usage:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+phpcs -vpn --standard=PEAR /var/www/geeklog/
+</pre></div>
+<!-- end code -->
+
+<p>Switches: verbose, no warnigs, show progress.</p>
+
+</div>
+<div class='slide '>
+<h1>PHP_CodeSniffer (results)</h1><!-- begin code{:name=>"snippets/phpcs-results.txt"} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>Registering sniffs in PEAR standard... DONE (26 sniffs registered)
+Creating file list... DONE (1 files in queue)
+Processing calendar.class.php [2656 tokens in 535 lines]... DONE in &lt; 1 second (75 errors, 0 warnings)
+
+FILE: /var/www/geeklog-1.8.0/system/classes/calendar.class.php
+--------------------------------------------------------------------------------
+FOUND 75 ERROR(S) AFFECTING 33 LINE(S)
+--------------------------------------------------------------------------------
+   2 | ERROR | You must use &quot;/**&quot; style comments for a file comment
+  49 | ERROR | Missing @category tag in class comment
+  49 | ERROR | Missing @package tag in class comment
+  49 | ERROR | Missing @author tag in class comment
+  49 | ERROR | Missing @license tag in class comment
+  49 | ERROR | Missing @link tag in class comment
+  50 | ERROR | Opening brace of a class must be on the line after the
+     |       | definition
+ 104 | ERROR | Missing class doc comment
+ 104 | ERROR | Opening brace of a class must be on the line after the
+     |       | definition
+ 172 | ERROR | Expected 1 space before variable type
+ 172 | ERROR | Expected 1 space after the longest type
+ 173 | ERROR | Expected 1 space before variable type
+ 173 | ERROR | Expected 1 space after the longest variable name
+ 174 | ERROR | Last parameter comment requires a blank newline after it
+ 174 | ERROR | Expected 1 space before variable type
+ 184 | ERROR | No space found after comma in function call
+ 184 | ERROR | No space found after comma in function call
+ 184 | ERROR | No space found after comma in function call
+ 184 | ERROR | No space found after comma in function call
+ 184 | ERROR | No space found after comma in function call
+ 195 | ERROR | Expected 1 space before variable type
+ 195 | ERROR | Expected 1 space after the longest type
+ 196 | ERROR | Expected 1 space before variable type
+ 196 | ERROR | Expected 1 space after the longest variable name
+ 197 | ERROR | Last parameter comment requires a blank newline after it
+ 197 | ERROR | Expected 1 space before variable type
+ 207 | ERROR | No space found after comma in function call
+ 207 | ERROR | No space found after comma in function call
+ 218 | ERROR | Last parameter comment requires a blank newline after it
+ 218 | ERROR | Expected 1 space before variable type
+ 218 | ERROR | Expected 1 space after the longest type
+ 218 | ERROR | Expected 1 space after the longest variable name
+ 247 | ERROR | Expected 1 space before variable type
+ 247 | ERROR | Expected 1 space after the longest type
+ 247 | ERROR | Expected 1 space after the longest variable name
+ 248 | ERROR | Last parameter comment requires a blank newline after it
+ 248 | ERROR | Expected 1 space before variable type
+ 310 | ERROR | Last parameter comment requires a blank newline after it
+ 310 | ERROR | Expected 1 space before variable type
+ 310 | ERROR | Expected 1 space after the longest type
+ 310 | ERROR | Expected 1 space after the longest variable name
+ 314 | ERROR | Opening brace should be on a new line
+ 355 | ERROR | Last parameter comment requires a blank newline after it
+ 355 | ERROR | Expected 1 space before variable type
+ 355 | ERROR | Expected 1 space after the longest type
+ 355 | ERROR | Expected 1 space after the longest variable name
+ 361 | ERROR | Line indented incorrectly; expected at least 8 spaces, found 4
+ 413 | ERROR | Last parameter comment requires a blank newline after it
+ 413 | ERROR | Expected 1 space before variable type
+ 413 | ERROR | Expected 1 space after the longest type
+ 413 | ERROR | Expected 1 space after the longest variable name
+ 415 | ERROR | Missing @return tag in function comment
+ 428 | ERROR | Expected 1 space before variable type
+ 428 | ERROR | Expected 1 space after the longest type
+ 429 | ERROR | Last parameter comment requires a blank newline after it
+ 429 | ERROR | Expected 1 space before variable type
+ 429 | ERROR | Expected 1 space after the longest variable name
+ 429 | ERROR | Doc comment for &quot;$week_start&quot; missing
+ 431 | ERROR | Missing @return tag in function comment
+ 472 | ERROR | Expected 1 space before variable type
+ 473 | ERROR | Expected 1 space before variable type
+ 474 | ERROR | Last parameter comment requires a blank newline after it
+ 474 | ERROR | Expected 1 space before variable type
+ 474 | ERROR | Expected 1 space after the longest type
+ 474 | ERROR | Expected 1 space after the longest variable name
+ 476 | ERROR | Missing @return tag in function comment
+ 479 | ERROR | No space found after comma in function call
+ 479 | ERROR | No space found after comma in function call
+ 499 | ERROR | No space found after comma in function call
+ 520 | ERROR | Expected 1 space before variable type
+ 520 | ERROR | Expected 1 space after the longest type
+ 521 | ERROR | Last parameter comment requires a blank newline after it
+ 521 | ERROR | Expected 1 space before variable type
+ 521 | ERROR | Expected 1 space after the longest variable name
+ 525 | ERROR | Opening brace should be on a new line
+--------------------------------------------------------------------------------
+
+Time: 0 seconds, Memory: 11.00Mb
+
+</pre></div>
+<div class="codeurl">snippets/phpcs-results.txt</div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>phpdocumentor</h1><p>auto-generate documentation from your code</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+sudo pear install --alldeps  pear/PhpDocumentor
+</pre></div>
+<!-- end code -->
+
+<p>usage:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+phpdoc -o HTML:frames:earthli -d /var/www/wordpress/ -t sampledocs
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>phpdocumentor results</h1><p><img src="images/phpdoc.png" alt="" /></p>
+
+</div>
+<div class='slide '>
+<h1>Reflection API</h1><p>Allows you to reverse-engineer classes, interfaces, functions, methods and extensions.
+p. Can also retrieve docblock comments for functions, classes and methods.
+p. Par of PHP core as of 5.</p>
+
+</div>
+<div class='slide '>
+<h1>Reflection API Usage</h1><p>comman-line usage:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+  --rf &lt;name&gt;      Show information about function &lt;name&gt;.
+  --rc &lt;name&gt;      Show information about class &lt;name&gt;.
+  --re &lt;name&gt;      Show information about extension &lt;name&gt;.
+  --ri &lt;name&gt;      Show configuration for extension &lt;name&gt;.
+</pre></div>
+<!-- end code -->
+
+<p>example with php -rf array_keys:</p>
+<!-- begin code{} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>
+Function [ &lt;internal:standard&gt; function array_keys ] {
+
+  - Parameters [3] {
+    Parameter #0 [ &lt;required&gt; $arg ]
+    Parameter #1 [ &lt;optional&gt; $search_value ]
+    Parameter #2 [ &lt;optional&gt; $strict ]
+  }
+}
+</pre></div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Relection API Usage</h1><!-- begin code{:name=>"snippets/reflection-example.php"} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>&lt;?php
+include('/var/www/wordpress/wp-includes/widgets.php');
+$reflector = new ReflectionClass('WP_Widget');
+
+$methods = $reflector-&gt;getMethods();
+foreach($methods as $method) {
+    $method_names[] = $method-&gt;name;
+}
+echo &quot;Methods: &quot; . implode(', ', $method_names);
+echo PHP_EOL . PHP_EOL;
+
+$properties = $reflector-&gt;getProperties();
+foreach($properties as $property) {
+    $property_names[] = $property-&gt;name;
+}
+echo &quot;Properties: &quot; . implode(', ', $property_names);
+echo PHP_EOL . PHP_EOL;
+
+$parent = $reflector-&gt;getParentClass();
+if(is_object($parent)) {
+    echo &quot;Parent Class: &quot; . $parent-&gt;getName();
+}
+else {
+    echo $reflector-&gt;getName() . &quot; has no parent.&quot;;
+}
+echo PHP_EOL . PHP_EOL;
+
+echo &quot;Doc Comment: &quot; . PHP_EOL . $reflector-&gt;getDocComment() . PHP_EOL;
+
+?&gt;
+</pre></div>
+<div class="codeurl">snippets/reflection-example.php</div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Relection API Usage</h1><!-- begin code{:name=>"snippets/reflection-results.txt"} -->
+<div class='code'><pre class='brush: ruby toolbar: false gutter: true'>Methods: widget, update, form, WP_Widget, __construct, get_field_name, get_field_id, _register, _set, _get_display_callback, _get_update_callback, _get_form_callback, display_callback, update_callback, form_callback, _register_one, save_settings, get_settings
+
+Properties: id_base, name, widget_options, control_options, number, id, updated
+
+WP_Widget has no parent.
+
+Doc Comment: 
+/**
+ * This class must be extended for each widget and WP_Widget::widget(), WP_Widget::update()
+ * and WP_Widget::form() need to be over-ridden.
+ *
+ * @package WordPress
+ * @subpackage Widgets
+ * @since 2.8
+ */
+</pre></div>
+<div class="codeurl">snippets/reflection-results.txt</div>
+<!-- end code -->
+
+
+</div>
+<div class='slide '>
+<h1>Other tools to consider</h1><p>phpdepend: <img src="http://pdepend.org/" alt="" />
+p. php mess detector: <img src="http://phpmd.org/" alt="" /></p>
+
+</div>
+<div class='slide '>
+<h1>Questions?</h1><h3>Christie Koehler</h3>
+<h3>christiekoehler@gmail.com</h3>
+<h3>@christiekoehler</h3></div>
+
+
+</div><!-- presentation -->
+</body>
+</html>

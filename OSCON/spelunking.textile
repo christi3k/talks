@@ -1,0 +1,327 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Start off with some headers
+
+Title: Tools for Spelunking a New-to-You Codebase
+Author: Christie Koehler
+Generator: Vim
+
+%css
+
+h1, h2, h3, h4, h5, h6 { color: #0050B0; }
+h2, h3 { text-align: center; }
+.slide h1 { font-size: 40pt; }
+.slide h2 { font-size: 36pt; color: black; }
+.slide h3 { margin: 0px; }
+
+div.slide {
+background-color: #adc3d8;
+}
+
+div.fullimage {
+    background-color: black;
+    background-repeat: no-repeat;
+    background-position:center center;
+    /*background-attachment:fixed;*/
+}
+
+div.cave { 
+    background-image: url('images/4825465616_c4a6d87d76_b_ericleslie.jpg'); 
+}
+
+img {   
+    display: block;   
+    margin-left: auto;   
+    margin-right: auto; 
+    width: 100%;
+}
+%end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Start Presentation
+
+h1. Tools for Spelunking a New-to-You Codebase
+
+h2. Christie Koehler
+
+h3. OSCON 2011 &mdash; Portland, Oregon
+
+h3. christiekoehler@gmail.com
+
+h3. @christiekoehler
+
+!SLIDE cave fullimage
+
+!SLIDE fullimage
+
+!images/lego-tools1.jpg!
+
+h1. "How you do learn a new-to-you codebase?"
+
+p. Some useful tools:
+
+* phpinclued
+* xdebug
+* phploc
+* phpdocumentor
+* PHP_CodeSniffer
+* Reflection Class
+
+h1. phpinclued
+
+p. phpinclued helps you analyze your project's structure (includes or classes). 
+
+* Yes, that's the correct spelling.
+* Available via pecl.
+* Use with Graphiz to create visualizations.
+
+p. To install:
+
+<% code do %>
+$ sudo pecl install channel://pecl.php.net/inclued-0.1.2
+<% end %>
+
+h1. phpinclued
+
+p. If successful, you should see something like:
+
+<% code do %>
+Build process completed successfully
+Installing '/usr/lib/php5/20090626/inclued.so'
+install ok: channel://pecl.php.net/inclued-0.1.2
+configuration option "php_ini" is not set to php.ini location
+You should add "extension=inclued.so" to php.ini
+<% end %>
+
+p. edit your php.ini (or create a /conf.d/inclued.ini)
+
+<% code do %>
+extension=inclued.so
+inclued.enabled=on
+inclued.dumpdir=/tmp/
+<% end %>
+
+p. Don't forget to turn this off when you're done (/tmp will fill up quickly!)
+
+h1. phpinclued usage
+
+<%= code 'snippets/example01-inclued.php' %>
+
+h1. phpinclued results
+
+<%= code 'snippets/example01-results.txt' %>
+
+h1. phpinclued & graphiz
+
+p. Make sure you have graphiz installed:
+
+<% code do %>
+sudo aptitude install graphviz
+<% end %>
+
+p. Run gengraph.php (comes with inclued):
+
+<% code do %>
+php /usr/share/php/gengraph.php -i /tmp/inclued.29752.4
+<% end %>
+
+p. Then use graphiz to create the graphic:
+
+<% code do %>
+dot -Tsvg -o wordpress.svg inclued.out.dot
+<% end %>
+
+h1. phpinclued & graphviz results
+
+!images/wordpress-crop.png!
+
+h1. xdebug profiling
+
+p. xdebug is a profiler and debugger for php
+
+p. install it via pecl:
+
+<% code do %>
+$ sudo pecl install xdebug
+<% end %>
+
+p. if successful, you will see:
+
+<% code do %>
+Build process completed successfully
+Installing '/usr/lib/php5/20090626/xdebug.so'
+install ok: channel://pecl.php.net/xdebug-2.1.1
+configuration option "php_ini" is not set to php.ini location
+You should add "extension=xdebug.so" to php.ini
+<% end %>
+
+h1. xdebug (configuration)
+
+p. edit your php.ini:
+
+<% code do %>
+zend_extension=/usr/lib/php5/20090626/xdebug.so
+
+; enable by default
+xdebug.default_enable = 1
+
+; disable @ error suppression
+xdebug.scream = 1
+<% end %>
+
+h1. xdebug useful methods
+
+p. Includes function to determine calling class, function, file and line, respectively:
+
+* xdebug_call_class()
+* xdebug_call_function()
+* xdebug_call_file()
+* xdebug_call_line()
+
+p. A bit easier to user than debug_backtrace().
+
+p. Other useful functions like _xdebug_memory_usage_, _xdebug_peak_memory_usage_, _xdebug_get_headers_.
+
+h1. xdebug profiling
+
+p. Useful for identifying bottlenecks and learning how your code is run.
+
+p. Outputs a cachegrind compatible file, which can be analyzed with:
+
+* KCacheGrind, 
+* xdebugtoolkit: !http://code.google.com/p/xdebugtoolkit/!
+* webgrind
+
+p. Enable by adding the following to php.ini:
+
+<% code do %>
+xdebug.profiler_enable = 1
+xdebug.profiler_output_dir = /tmp               ; (default)
+xdebug.profiler_output_name = cachegrind.out.%p ; (default)
+<% end %>
+
+h1. xdebug profiling
+
+p. cachegrind.out data can be analyzed with kcachegrind:
+
+!images/cachegrind-sm.png!
+
+h1. phploc (lines of code)
+
+p. Allows you to give you a quick overview of a project's size
+
+p. https://github.com/sebastianbergmann/phploc/
+
+p. Install through PEAR:
+
+<% code do %>
+sudo pear channel-discover pear.phpunit.de
+sudo pear channel-discover components.ez.no
+sudo pear install phpunit/phploc
+<% end %>
+
+p. Usage:
+
+<% code do %>
+phploc --count-tests /var/www/ThinkUp/
+<% end %>
+
+h1. phploc results 
+
+p. results:
+
+<%= code 'snippets/phploc-results.txt' %>
+
+h1. PHP_CodeSniffer
+
+p. Analyzes code for adherence to different coding standards.
+p. Standards installed by default: PEAR, PHPCS, Squiz, MySource and Zend.
+p. You can create your own coding standards or "sniffs".
+p. Can be used in conjunction with pre-commit hooks.
+
+p. Install via PEAR:
+
+<% code do %>
+sudo pear install PHP_CodeSniffer
+<% end %>
+
+p. Usage: 
+
+<% code do %>
+phpcs -vpn --standard=PEAR /var/www/geeklog/
+<% end %>
+
+p. Switches: verbose, no warnigs, show progress.
+
+h1. PHP_CodeSniffer (results)
+
+<%= code 'snippets/phpcs-results.txt' %>
+
+h1. phpdocumentor
+
+p. auto-generate documentation from your code
+
+<% code do %>
+sudo pear install --alldeps  pear/PhpDocumentor
+<% end %>
+
+p. usage: 
+
+<% code do %>
+phpdoc -o HTML:frames:earthli -d /var/www/wordpress/ -t sampledocs
+<% end %>
+
+h1. phpdocumentor results
+
+!images/phpdoc.png!
+
+h1. Reflection API
+
+p. Allows you to reverse-engineer classes, interfaces, functions, methods and extensions.
+p. Can also retrieve docblock comments for functions, classes and methods.
+p. Par of PHP core as of 5.
+
+h1. Reflection API Usage
+
+p. comman-line usage:
+
+<% code do %>
+  --rf <name>      Show information about function <name>.
+  --rc <name>      Show information about class <name>.
+  --re <name>      Show information about extension <name>.
+  --ri <name>      Show configuration for extension <name>.
+<% end %>
+
+p. example with php -rf array_keys:
+
+<% code do %>
+Function [ <internal:standard> function array_keys ] {
+
+  - Parameters [3] {
+    Parameter #0 [ <required> $arg ]
+    Parameter #1 [ <optional> $search_value ]
+    Parameter #2 [ <optional> $strict ]
+  }
+}
+<% end %>
+
+h1. Relection API Usage
+
+<%= code 'snippets/reflection-example.php' %>
+
+h1. Relection API Usage
+
+<%= code 'snippets/reflection-results.txt' %>
+
+h1. Other tools to consider
+
+p. phpdepend: !http://pdepend.org/!
+p. php mess detector: !http://phpmd.org/!
+
+h1. Questions?
+
+h3. Christie Koehler
+
+h3. christiekoehler@gmail.com
+
+h3. @christiekoehler
+

@@ -1,0 +1,14 @@
+[62] => Array
+    (
+        [name] => WP_Widget_Text
+        [mangled_name] => wp_widget_text
+        [filename] => /var/www/wordpress/wp-includes/default-widgets.php
+        [line] => 368
+        [parent] => Array
+            (
+                [name] => WP_Widget
+                [filename] => /var/www/wordpress/wp-includes/widgets.php
+                [line] => 24
+            )
+
+    )

@@ -1,0 +1,15 @@
+Methods: widget, update, form, WP_Widget, __construct, get_field_name, get_field_id, _register, _set, _get_display_callback, _get_update_callback, _get_form_callback, display_callback, update_callback, form_callback, _register_one, save_settings, get_settings
+
+Properties: id_base, name, widget_options, control_options, number, id, updated
+
+WP_Widget has no parent.
+
+Doc Comment: 
+/**
+ * This class must be extended for each widget and WP_Widget::widget(), WP_Widget::update()
+ * and WP_Widget::form() need to be over-ridden.
+ *
+ * @package WordPress
+ * @subpackage Widgets
+ * @since 2.8
+ */
